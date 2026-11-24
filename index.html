@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Spočítej si, kolik ti z hrubé mzdy zbude na účet a kolik tě stojí firmu." />
+    <title>Kolik mi zbude z výplaty</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap"
+    />
+  </head>
+  <body>
+    <main class="wrap">
+      <header>
+        <p class="eyebrow">Ekonomický den · OATGM</p>
+        <h1>Kolik mi zbude z výplaty?</h1>
+        <p class="lede">Zadej hrubou mzdu a uvidíš, kam z ní jdou peníze.</p>
+      </header>
+
+      <form id="form" class="card" novalidate>
+        <label for="gross">Hrubá měsíční mzda</label>
+        <div class="input-row">
+          <input id="gross" name="gross" type="number" inputmode="numeric" min="0" step="100" value="40000" />
+          <span class="unit">Kč</span>
+        </div>
+        <label class="check">
+          <input id="declaration" type="checkbox" checked />
+          Podepsal(a) jsem prohlášení poplatníka (sleva na dani)
+        </label>
+        <p id="error" class="error" role="alert" hidden></p>
+      </form>
+
+      <section class="card result" aria-live="polite">
+        <p class="net-label">Na účet ti přijde</p>
+        <p id="net" class="net">–</p>
+        <div id="bar" class="bar" aria-hidden="true"></div>
+        <dl id="breakdown" class="breakdown"></dl>
+      </section>
+
+      <section class="card employer">
+        <p class="net-label">Firmu stojíš</p>
+        <p id="cost" class="cost">–</p>
+        <p id="cost-note" class="note"></p>
+      </section>
+
+      <footer class="note">
+        Výpočet pro hlavní pracovní poměr v roce 2026, bez dětí a dalších slev. Orientační, ne daňové poradenství.
+      </footer>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
