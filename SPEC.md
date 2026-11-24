@@ -13,6 +13,7 @@ Webová kalkulačka pro studenty Obchodní akademie T. G. Masaryka. Na mobilu uk
    - barevný pruh a tabulka: čistá mzda, daň, sociální a zdravotní pojištění (Kč i % z hrubé),
    - cena práce: hrubá mzda + odvody zaměstnavatele.
 4. Srozumitelná chyba u neplatného vstupu.
+5. Koláčový (donut) graf „Kam jdou peníze z výplaty“: podíl čisté mzdy, daně, sociálního a zdravotního pojištění, uprostřed kolik procent zbude tobě.
 
 ## Pravidla výpočtu (rok 2026, hlavní pracovní poměr)
 
