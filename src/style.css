@@ -1,0 +1,115 @@
+:root {
+  --bg: #f3f5f8;
+  --surface: #fbfcfd;
+  --ink: #141b24;
+  --muted: #4a5565;
+  --line: #dce1e8;
+  --accent: #1c5fcc;
+  --net: #1a7f37;
+  --tax: #cf6a14;
+  --social: #1c5fcc;
+  --health: #8a2fb0;
+  --error: #b42318;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #10161d;
+    --surface: #161d26;
+    --ink: #e7ecf3;
+    --muted: #aeb8c6;
+    --line: #2a3441;
+    --accent: #7db1fe;
+    --net: #3fb950;
+    --tax: #f0883e;
+    --social: #7db1fe;
+    --health: #c48be6;
+    --error: #ff7b72;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 Inter, "Segoe UI", system-ui, sans-serif;
+}
+.wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+  display: grid;
+  gap: 16px;
+}
+h1 {
+  font: 700 clamp(1.9rem, 7vw, 2.6rem)/1.1 "Space Grotesk", "Segoe UI", sans-serif;
+  margin: 4px 0 8px;
+  letter-spacing: -0.02em;
+}
+.eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+.lede { margin: 0; color: var(--muted); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+}
+label { font-weight: 600; }
+.input-row { display: flex; align-items: center; gap: 10px; }
+input[type="number"] {
+  flex: 1;
+  min-width: 0;
+  font: 600 1.6rem "Space Grotesk", sans-serif;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+}
+input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.unit { font-weight: 600; color: var(--muted); }
+.check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; color: var(--muted); }
+.check input { margin-top: 4px; width: 18px; height: 18px; }
+.error { margin: 0; color: var(--error); }
+
+.net-label { margin: 0; color: var(--muted); font-weight: 600; }
+.net, .cost {
+  margin: 0;
+  font: 700 clamp(2.2rem, 10vw, 3rem)/1 "Space Grotesk", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.net { color: var(--net); }
+
+.bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; gap: 2px; }
+.seg { display: block; min-width: 2px; transition: flex-grow 0.3s ease; }
+.seg-net { background: var(--net); }
+.seg-tax { background: var(--tax); }
+.seg-social { background: var(--social); }
+.seg-health { background: var(--health); }
+
+.breakdown {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  font-variant-numeric: tabular-nums;
+}
+.breakdown dt { display: flex; align-items: center; gap: 8px; }
+.breakdown dd { margin: 0; text-align: right; color: var(--muted); }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+
+.note { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+@media (prefers-reduced-motion: reduce) { .seg { transition: none; } }
