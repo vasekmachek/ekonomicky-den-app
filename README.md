@@ -1,0 +1,1 @@
+# ekonomicky-den-app
