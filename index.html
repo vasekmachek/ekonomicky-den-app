@@ -21,6 +21,17 @@
       </header>
 
       <form id="form" class="card" novalidate>
+        <fieldset class="contract">
+          <legend>Na jakou smlouvu pracuješ?</legend>
+          <label class="choice">
+            <input type="radio" name="contract" value="hpp" checked />
+            Hlavní pracovní poměr
+          </label>
+          <label class="choice">
+            <input type="radio" name="contract" value="dpp" />
+            Brigáda na DPP
+          </label>
+        </fieldset>
         <label for="gross">Hrubá měsíční mzda</label>
         <div class="input-row">
           <input id="gross" name="gross" type="number" inputmode="numeric" min="0" step="100" value="40000" />
@@ -30,6 +41,7 @@
           <input id="declaration" type="checkbox" checked />
           Podepsal(a) jsem prohlášení poplatníka (sleva na dani)
         </label>
+        <p id="contract-note" class="note" hidden></p>
         <p id="error" class="error" role="alert" hidden></p>
       </form>
 
@@ -47,7 +59,7 @@
       </section>
 
       <footer class="note">
-        Výpočet pro hlavní pracovní poměr v roce 2026, bez dětí a dalších slev. Orientační, ne daňové poradenství.
+        Výpočet pro hlavní pracovní poměr a DPP v roce 2026, bez dětí a dalších slev. Orientační, ne daňové poradenství.
       </footer>
     </main>
     <script type="module" src="/src/main.ts"></script>

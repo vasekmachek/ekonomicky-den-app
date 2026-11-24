@@ -1,4 +1,4 @@
-// Výpočet čisté mzdy zaměstnance v ČR (hlavní pracovní poměr, měsíční mzda).
+// Výpočet čisté mzdy zaměstnance v ČR (hlavní pracovní poměr nebo DPP, měsíční mzda).
 // Všechny sazby a částky jsou v PARAMS_2026, ať se dají jedním místem aktualizovat.
 
 export interface SalaryParams {
@@ -19,6 +19,10 @@ export interface SalaryParams {
   highTaxThresholdMonthly: number;
   /** Měsíční sleva na poplatníka. */
   taxpayerCredit: number;
+  /** DPP: od této měsíční odměny se platí sociální a zdravotní pojištění. */
+  dppInsuranceLimit: number;
+  /** DPP pod limitem bez prohlášení: sazba srážkové daně. */
+  withholdingTaxRate: number;
 }
 
 export const PARAMS_2026: SalaryParams = {
@@ -31,11 +35,18 @@ export const PARAMS_2026: SalaryParams = {
   taxRateHigh: 0.23,
   highTaxThresholdMonthly: 146_901, // 3 × průměrná mzda 48 967 Kč
   taxpayerCredit: 2_570,
+  dppInsuranceLimit: 12_000, // 25 % průměrné mzdy, pro rok 2026
+  withholdingTaxRate: 0.15,
 };
+
+/** Typ úvazku: hlavní pracovní poměr nebo dohoda o provedení práce. */
+export type ContractType = "hpp" | "dpp";
 
 export interface SalaryOptions {
   /** Podepsané prohlášení poplatníka: uplatní se sleva na poplatníka. */
   signedDeclaration: boolean;
+  /** Typ úvazku, výchozí je hlavní pracovní poměr. */
+  contract?: ContractType;
 }
 
 export interface SalaryResult {
@@ -47,6 +58,10 @@ export interface SalaryResult {
   taxBeforeCredit: number;
   credit: number;
   tax: number;
+  /** Daň je srážková (DPP pod limitem bez prohlášení), ne zálohová. */
+  withholdingTax: boolean;
+  /** Platí se sociální a zdravotní pojištění (u DPP jen od limitu). */
+  insured: boolean;
   net: number;
   employerSocial: number;
   employerHealth: number;
@@ -74,21 +89,36 @@ export function calculateSalary(
     throw new RangeError("Hrubá mzda musí být nezáporné číslo.");
   }
 
-  const social = roundUpToCrown(gross * p.socialRate);
-  const health = roundUpToCrown(gross * p.healthRate);
+  const isDpp = options.contract === "dpp";
+  // DPP pod limitem: žádné pojištění zaměstnance ani zaměstnavatele.
+  const insured = !isDpp || gross >= p.dppInsuranceLimit;
+  // DPP pod limitem bez prohlášení: 15% srážková daň, bez slevy.
+  const withholdingTax = isDpp && !insured && !options.signedDeclaration;
 
-  const taxBase = taxBaseFor(gross);
-  const lowPart = Math.min(taxBase, p.highTaxThresholdMonthly);
-  const highPart = Math.max(0, taxBase - p.highTaxThresholdMonthly);
-  const taxBeforeCredit = roundUpToCrown(lowPart * p.taxRate + highPart * p.taxRateHigh);
+  const social = insured ? roundUpToCrown(gross * p.socialRate) : 0;
+  const health = insured ? roundUpToCrown(gross * p.healthRate) : 0;
 
-  const credit = options.signedDeclaration ? Math.min(p.taxpayerCredit, taxBeforeCredit) : 0;
+  let taxBase: number;
+  let taxBeforeCredit: number;
+  if (withholdingTax) {
+    // Srážková daň: základ i daň se zaokrouhlují na celé koruny dolů.
+    taxBase = Math.floor(gross);
+    taxBeforeCredit = Math.floor(Math.round(taxBase * p.withholdingTaxRate * 100) / 100);
+  } else {
+    taxBase = taxBaseFor(gross);
+    const lowPart = Math.min(taxBase, p.highTaxThresholdMonthly);
+    const highPart = Math.max(0, taxBase - p.highTaxThresholdMonthly);
+    taxBeforeCredit = roundUpToCrown(lowPart * p.taxRate + highPart * p.taxRateHigh);
+  }
+
+  const credit =
+    options.signedDeclaration && !withholdingTax ? Math.min(p.taxpayerCredit, taxBeforeCredit) : 0;
   const tax = taxBeforeCredit - credit;
 
   const net = gross - social - health - tax;
 
-  const employerSocial = roundUpToCrown(gross * p.employerSocialRate);
-  const employerHealth = roundUpToCrown(gross * p.employerHealthRate);
+  const employerSocial = insured ? roundUpToCrown(gross * p.employerSocialRate) : 0;
+  const employerHealth = insured ? roundUpToCrown(gross * p.employerHealthRate) : 0;
 
   return {
     gross,
@@ -98,6 +128,8 @@ export function calculateSalary(
     taxBeforeCredit,
     credit,
     tax,
+    withholdingTax,
+    insured,
     net,
     employerSocial,
     employerHealth,

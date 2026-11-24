@@ -13,6 +13,7 @@ Webová kalkulačka pro studenty Obchodní akademie T. G. Masaryka. Na mobilu uk
    - barevný pruh a tabulka: čistá mzda, daň, sociální a zdravotní pojištění (Kč i % z hrubé),
    - cena práce: hrubá mzda + odvody zaměstnavatele.
 4. Srozumitelná chyba u neplatného vstupu.
+5. Přepínač typu úvazku: hlavní pracovní poměr nebo brigáda na DPP. Na DPP pod limitem 12 000 Kč měsíčně se neplatí sociální ani zdravotní pojištění a bez prohlášení se strhne 15% srážková daň (zaokrouhleno na koruny dolů). Od limitu se DPP počítá jako hlavní pracovní poměr.
 
 ## Pravidla výpočtu (rok 2026, hlavní pracovní poměr)
 
