@@ -1,5 +1,6 @@
 import "./style.css";
 import { calculateSalary, type SalaryResult } from "./salary";
+import { initialTheme, nextTheme, toggleLabel, type Theme } from "./theme";
 
 const czk = new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 });
 
@@ -72,3 +73,16 @@ grossInput.addEventListener("input", render);
 declaration.addEventListener("change", render);
 document.querySelector("#form")!.addEventListener("submit", (e) => e.preventDefault());
 render();
+
+const themeToggle = document.querySelector<HTMLButtonElement>("#theme-toggle")!;
+function applyTheme(theme: Theme): void {
+  document.documentElement.dataset.theme = theme;
+  themeToggle.textContent = toggleLabel(theme);
+  themeToggle.setAttribute("aria-pressed", String(theme === "dark"));
+}
+let theme = initialTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+applyTheme(theme);
+themeToggle.addEventListener("click", () => {
+  theme = nextTheme(theme);
+  applyTheme(theme);
+});
